@@ -9,11 +9,12 @@ const findAll = async () => {
 
 const findById = async (productId) => {
   const [[product]] = await connection.execute(
-    'SELECT * FROM StoreManager.products WHERE id = ?',
+    'SELECT * FROM StoreManager.products WHERE id = ? ORDER BY id',
     [productId],
   );
   return (product);
 };
+
 const insert = () => { };
 
 module.exports = {
