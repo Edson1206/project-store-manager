@@ -1,4 +1,4 @@
-const invalidValue = 'a';
+const invalidValue = 'Bola';
 const validName = 'Martelo de Thor';
 
 const allProducts = [
@@ -10,5 +10,6 @@ const allProducts = [
 
 module.exports = {
   invalidValue,
+  validName,
   allProducts,
 }

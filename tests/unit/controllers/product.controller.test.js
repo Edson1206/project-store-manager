@@ -60,7 +60,25 @@ describe('Product controller unit tests', function () {
     expect(res.status).to.have.been.calledWith(404);
     expect(res.json).to.have.been.calledWith({ message: 'Product not found' });
 
-  })
+  });
+
+  it('Successfully registering a new product', async function () {
+    const res = {};
+    const req = {
+      body: productMock,
+    };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+    sinon
+      .stub(productService, 'createProduct')
+      .resolves({ type: null, message: newProductMock });
+
+    await productController.createProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(201);
+    expect(res.json).to.have.been.calledWith(newProductMock);
+  });
 
   afterEach(sinon.restore);
 });

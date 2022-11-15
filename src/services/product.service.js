@@ -1,7 +1,5 @@
 const { productModel } = require('../models');
-const { validateId,
-  validateNewProduct,
-} = require('./validations/validationsInputValues');
+const { validateId, validateNewProduct } = require('./validations/validationsInputValues');
 
 const findAll = async () => {
   const products = await productModel.findAll();

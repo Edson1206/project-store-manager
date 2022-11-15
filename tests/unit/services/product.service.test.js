@@ -1,8 +1,8 @@
 const { expect } = require('chai');
 const sinon = require('sinon');
-const { findAll, findById } = require('../../../src/services/product.service');
+const { findAll, findById, createProduct } = require('../../../src/services/product.service');
 const productModel = require('../../../src/models/product.model');
-const { allProducts, invalidValue } = require('./mocks/product.service.mock');
+const { allProducts, invalidValue, validName } = require('./mocks/product.service.mock');
 
 describe('Product service unit tests', function () {
 
@@ -38,4 +38,33 @@ describe('Product service unit tests', function () {
 
   });
 
+  describe('Registration of a product with invalid values', function () {
+    
+    it('Returns an error when passing an invalid name', async function () {
+      const result = await createProduct(invalidValue);
+
+      expect(result.type).to.equal('INVALID_VALUE');
+      expect(result.message).to.equal('"name" length must be at least 5 characters long');
+    });
+
+  });
+
+  describe('Registration of a product with valid values', function () {
+    
+    it('Returns the registered product ID', async function () {
+      sinon.stub(productModel, 'insert').resolves([{ insertId: 1 }]);
+      sinon.stub(productModel, 'findById').resolves(allProducts[0]);
+      
+      const result = await createProduct(validName);
+
+      expect(result.type).to.equal(null);
+      expect(result.message).to.deep.equal(allProducts[0]);
+    });
+
+  });
+
+  afterEach(function () {
+     sinon.restore();
+  });
+  
 });
