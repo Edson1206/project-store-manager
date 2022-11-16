@@ -7,7 +7,7 @@ const saveSaleProduct = (sales, newSale) => sales.map(async ({ productId, quanti
 const productExist = (sales) => {
   if (sales && sales.length > 0) {
     return sales.map(async ({ productId }) => {
-      const [product] = await productModel.findById(productId);
+      const product = await productModel.findById(productId);
       if (product) return true;
       return false;
     });
