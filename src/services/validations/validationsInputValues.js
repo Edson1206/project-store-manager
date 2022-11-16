@@ -18,4 +18,5 @@ const validateNewProduct = (name) => {
 module.exports = {
   validateId,
   validateNewProduct,
+
 };

@@ -8,4 +8,5 @@ const addProductSchema = Joi.object({
 module.exports = {
   idSchema,
   addProductSchema,
+
 };
