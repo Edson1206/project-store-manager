@@ -1,11 +1,12 @@
-const { saleModel } = require('../models');
+const { saleService } = require('../services');
+const errorMap = require('../utils/errorMap');
 
 const createSales = async (req, res) => {
-  const { body } = req;
-
-  const { message } = await saleModel.insertSales(body);
-
-  return res.status(201).json(message);
+  const { type, message } = await saleService.createSale(req.body);
+  
+  if (type) return res.status(errorMap.mapError(type)).json({ message });
+  
+  res.status(201).json(message);
 };
 
 module.exports = {

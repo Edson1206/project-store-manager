@@ -8,11 +8,11 @@ const findAll = async () => {
 };
 
 const findById = async (productId) => {
-  const [[product]] = await connection.execute(
-    'SELECT * FROM StoreManager.products WHERE id = ? ORDER BY id',
+  const [product] = await connection.execute(
+    'SELECT * FROM StoreManager.products WHERE id = ?',
     [productId],
   );
-  return (product);
+  return product;
 };
 
 const insert = async (product) => {

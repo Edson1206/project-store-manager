@@ -1,21 +1,21 @@
 const connection = require('./connection');
 
-const insertSales = async (sales) => {
+const insertSale = async () => {
   const [{ insertId }] = await connection.execute(
-    `INSERT INTO StoreManager.sales (date) VALUES
-    (NOW())`,
+    'INSERT INTO StoreManager.sales (date) VALUE (NOW())',
   );
-  
-  await Promise.all(sales.map(async ({ productId, quantity }) => {
-    await connection.execute(
-      'INSERT INTO StoreManager.sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?)',
-      [insertId, ...Object.values(productId, quantity)],
-    );
-  }));
-  
   return insertId;
 };
 
+const insertSaleProduct = async (id, productId, quantity) => {
+  const [{ result }] = await connection.execute(
+    'INSERT INTO StoreManager.sales_products (sale_id, product_id, quantity) VALUE (?, ?, ?)',
+    [id, productId, quantity],
+  );
+  return result;
+};
+
 module.exports = {
-  insertSales,
+  insertSale,
+  insertSaleProduct,
 };
