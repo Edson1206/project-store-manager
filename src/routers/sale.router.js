@@ -4,8 +4,8 @@ const { validateNewSale } = require('../services/validations/validationsInputVal
 
 const router = express.Router();
 
-router.post('/',
-  validateNewSale,
-  saleController.createSales);
+router.post('/', validateNewSale, saleController.createSales);
+router.get('/', saleController.getAllSales);
+router.get('/:id', saleController.getSaleById);
 
 module.exports = router;

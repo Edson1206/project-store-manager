@@ -29,7 +29,25 @@ const createSale = async (sales) => {
   return { type: null, message: newSales };
 };
 
+const getAllSales = async () => {
+  const result = await saleModel.getAllSales();
+
+  return result;
+};
+
+const getSaleById = async (id) => {
+  const result = await saleModel.getSaleById(id);
+
+  if (result.length === 0) {
+    return { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
+  }
+
+  return { type: null, message: result };
+};
+
 module.exports = {
   saveSaleProduct,
   createSale,
+  getAllSales,
+  getSaleById,
 };
