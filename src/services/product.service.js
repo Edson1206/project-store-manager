@@ -25,8 +25,21 @@ const createProduct = async (name) => {
   return { type: null, message: newPassenger };
 };
 
+const updateProduct = async (id, productName) => {
+  const error = validateNewProduct(productName);
+  if (error.type) return error;
+  
+  await productModel.updateProduct(id, productName);
+  const product = await productModel.findById(id);
+
+  if (!product) return ({ type: 'PRODUCT_NOT_FOUND', message: 'Product not found' });
+
+  return { type: null, message: product };
+};
+
 module.exports = {
   findAll,
   findById,
   createProduct,
+  updateProduct,
 };
