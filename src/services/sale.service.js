@@ -1,4 +1,5 @@
 const { saleModel, productModel } = require('../models');
+const { saleExist } = require('./validations/validationsInputValues');
 
 const saveSaleProduct = (sales, newSale) => sales.map(async ({ productId, quantity }) => {
       await saleModel.insertSaleProduct(newSale, productId, quantity);
@@ -45,9 +46,20 @@ const getSaleById = async (id) => {
   return { type: null, message: result };
 };
 
+const deleteSale = async (id) => {
+  const sale = await saleExist(id);
+
+  if (!sale[0]) return { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
+
+  const saleDeleted = await saleModel.deleteSale(id);
+
+  return { type: null, message: saleDeleted };
+};
+
 module.exports = {
   saveSaleProduct,
   createSale,
   getAllSales,
   getSaleById,
+  deleteSale,
 };

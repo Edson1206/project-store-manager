@@ -1,3 +1,4 @@
+const { saleModel } = require('../../models');
 const { idSchema, addProductSchema, newSaleSchema } = require('./schemas');
 
 const validateId = (id) => {
@@ -13,6 +14,12 @@ const validateNewProduct = (name) => {
   if (error) return { type: 'INVALID_VALUE', message: error.message };
 
   return { type: null, message: '' };
+};
+
+const saleExist = async (id) => {
+  const sale = await saleModel.getSaleById(Number(id));
+
+  return sale;
 };
 
 const validateNewSale = async (req, res, next) => {
@@ -33,5 +40,6 @@ const validateNewSale = async (req, res, next) => {
 module.exports = {
   validateId,
   validateNewProduct,
+  saleExist,
   validateNewSale,
 };

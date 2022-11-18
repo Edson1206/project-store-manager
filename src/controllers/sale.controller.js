@@ -6,7 +6,7 @@ const createSales = async (req, res) => {
   
   if (type) return res.status(errorMap.mapError(type)).json({ message });
   
-  res.status(201).json(message);
+  return res.status(201).json(message);
 };
 
 const getAllSales = async (_req, res) => {
@@ -25,8 +25,19 @@ const getSaleById = async (req, res) => {
   return res.status(200).json(message);
 };
 
+const deleteSale = async (req, res) => {
+  const { id } = req.params;
+
+  const { type, message } = await saleService.deleteSale(id);
+
+  if (type) return res.status(errorMap.mapError(type)).json({ message });
+
+  return res.status(204).json();
+};
+
 module.exports = {
   createSales,
   getAllSales,
   getSaleById,
+  deleteSale,
 };
