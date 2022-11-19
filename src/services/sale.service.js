@@ -1,26 +1,15 @@
-const { saleModel, productModel } = require('../models');
-const { saleExist } = require('./validations/validationsInputValues');
+const { saleModel } = require('../models');
+const { saleExist, productExist } = require('./validations/validationsInputValues');
 
 const saveSaleProduct = (sales, newSale) => sales.map(async ({ productId, quantity }) => {
       await saleModel.insertSaleProduct(newSale, productId, quantity);
     });
 
-const productExist = (sales) => {
-  if (sales && sales.length > 0) {
-    return sales.map(async ({ productId }) => {
-      const product = await productModel.findById(productId);
-      if (product) return true;
-      return false;
-    });
-  }
-  return [false];
-};
-    
 const createSale = async (sales) => {
-  const promisseAll = await Promise.all(productExist(sales));
-  if (promisseAll.includes(false)) {
-    return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
-  }
+  const allIdsValid = await productExist(sales);
+
+  if (!allIdsValid) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+
   const saleId = await saleModel.insertSale();
   await Promise.all(saveSaleProduct(sales, saleId));
   const newSales = {
@@ -56,10 +45,26 @@ const deleteSale = async (id) => {
   return { type: null, message: saleDeleted };
 };
 
+const updateSale = async (id, changes) => {
+  const allIdsValid = await productExist(changes);
+
+  if (!allIdsValid) return { type: 'PRODUCT_NOT_FOUND', message: 'Product not found' };
+
+  const findSale = await saleExist(id);
+
+  if (!findSale[0]) return { type: 'SALE_NOT_FOUND', message: 'Sale not found' };
+
+  const saleUpdated = changes.map((change) => saleModel.updateSale(id, change));
+  await Promise.all(saleUpdated);
+
+  return { type: null, message: { saleId: id, itemsUpdated: changes } };
+};
+
 module.exports = {
   saveSaleProduct,
   createSale,
   getAllSales,
   getSaleById,
   deleteSale,
+  updateSale,
 };
