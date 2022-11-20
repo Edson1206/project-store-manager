@@ -43,7 +43,7 @@ const deleteProduct = async (req, res) => {
 
   if (type) return res.status(errorMap.mapError(type)).json({ message });
 
-  res.sendStatus(204);
+  res.status(204).end();
 };
 
 const searchProduct = async (req, res) => {

@@ -80,5 +80,36 @@ describe('Product controller unit tests', function () {
     expect(res.json).to.have.been.calledWith(newProductMock);
   });
 
+  it('Deleting a product successfully', async function () {
+    const res = {};
+    const req = { params: { id: 2 }, body: {} };
+
+    res.status = sinon.stub().returns(res);
+    res.end = sinon.stub().returns();
+
+    sinon.stub(productService, "deleteProduct").resolves({ type: null });
+
+    await productController.deleteProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(204)
+  });
+
+  it('Returns an error when trying to delete a non-existent id', async function () {
+    const res = {};
+    const req = { params: { id: 2 }, body: {} };
+
+    res.status = sinon.stub().returns(res);
+    res.json = sinon.stub().returns();
+
+    sinon
+      .stub(productService, "deleteProduct")
+      .resolves({ type: 'PRODUCT_NOT_FOUND', message: "Product not found" });
+
+    await productController.deleteProduct(req, res);
+
+    expect(res.status).to.have.been.calledWith(404);
+    expect(res.json).to.have.been.calledWith({ message: "Product not found" });
+  });
+  
   afterEach(sinon.restore);
 });
